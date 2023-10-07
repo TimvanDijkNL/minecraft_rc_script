@@ -1,0 +1,112 @@
+#!/bin/sh
+# Created by: Tim van Dijk <contact@timvandijk.nl>
+
+# PROVIDE: minecraft
+# REQUIRE: LOGIN
+# KEYWORD: shutdown
+
+#
+# Add the following lines to /etc/rc.conf to enable minecraft:
+# minecraft_enable (bool):		Set to "NO" by default.
+# 		Set it to YES to enable minecraft.
+# minecraft_dir (string):		Set to "/usr/local/minecraft" by default.
+#		The path to the folder for the minecraft server.
+# minecraft_user (string):		Set to "minecraft" by default.
+#		The user that will run the minecraft server.
+# minecraft_jar (string):		Set to "server.jar" by default.
+#		Set this to the server file of your choice.
+# minecraft_flags (string):		No default value.
+#		Optional parameters to pass on to Java.
+#
+
+. /etc/rc.subr
+
+name=minecraft
+rcvar=minecraft_enable
+
+# set defaults
+
+load_rc_config $name
+
+: ${minecraft_enable:=NO}
+: ${minecraft_dir=/usr/local/minecraft/}
+: ${minecraft_user=minecraft}
+: ${minecraft_jar="server.jar"}
+: ${minecraft_flags=""}
+
+extra_commands="status attach"
+start_cmd="${name}_start"
+stop_cmd="${name}_stop"
+status_cmd="${name}_status"
+attach_cmd="${name}_attach"
+
+# internal variables
+
+java_command="/usr/local/bin/javavm ${minecraft_flags} -jar ${minecraft_jar}"
+java_pid="" # will be used later on.
+
+check_prereqs() {
+    if [ -e /usr/local/bin/tmux ] && [ -e /usr/local/bin/javavm ]; then
+	# We have both, let's see if the server is (already?) running.
+	java_pid=`/usr/bin/pgrep -U ${minecraft_user} java`
+    else
+	echo "ERROR: Java and/or tmux does not seem to be installed."
+	exit 0
+    fi
+}
+
+minecraft_start() {
+    check_prereqs
+    if [ ! "${java_pid}" ]; then
+	echo "Starting ${name}..."
+	/usr/bin/su ${minecraft_user} -c "/usr/local/bin/tmux new-session -c ${minecraft_dir} -d -s ${name} ${java_command}"
+	sleep 1
+	minecraft_status
+    else 
+	echo "${name} is already running as pid ${java_pid}."
+    fi
+}
+
+minecraft_stop() {
+    check_prereqs
+    if [ ! "${java_pid}" ]; then
+	echo "${name} is not running."
+    else
+	echo -n "Shutting down ${name}, waiting for PIDS: ${java_pid}"
+	/usr/bin/su ${minecraft_user} -c "/usr/local/bin/tmux send -t ${name}:0.0 stop \"enter\""
+	while [ "${java_pid}" ]; do
+	    echo -n "."
+	    sleep 1
+	    java_pid=`/usr/bin/pgrep -U ${minecraft_user} -a java`
+	done
+	echo
+    fi
+}
+
+minecraft_status() {
+    check_prereqs
+    if [ ! "${java_pid}" ]; then
+	echo "${name} is not running."
+    else
+	echo "${name} is running as pid ${java_pid}."
+    fi
+}
+
+minecraft_attach() {
+    check_prereqs
+    if [ ! "$java_pid" ]; then
+	echo "${name} is not running."
+    else
+	text_yellow='\033[1;33m'
+	text_green='\033[1;32m'
+	text_red='\033[1;31m'
+	text_normal='\033[0m'
+	echo -e	"\nTo detach again, press ${text_yellow}CTRL-B${text_normal} and then ${text_yellow}D${text_normal}.\n" \
+		"Right now, press ${text_red}CTRL-C${text_normal} to cancel, or press ${text_green}ENTER${text_normal} to continue...\n"
+	read null
+	export TERM=screen-256color
+	/usr/bin/su ${minecraft_user} -c "/usr/local/bin/tmux attach -t ${name}"
+    fi
+}
+
+run_rc_command "$1"
