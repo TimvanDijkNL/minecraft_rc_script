@@ -56,4 +56,5 @@ Once you have completed these steps:
 
 - To attach to the Minecraft server console: `service minecraft attach`
   
-  You can now use the console to manage your Minecraft server.
+  You can now use the console to manage your Minecraft server. To detach again, press `CTRL-B` and then `D`.
+
