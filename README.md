@@ -24,7 +24,9 @@ For the Minecraft server:
    
     `echo "set -g default-terminal screen-256color" > /usr/local/minecraft/.tmux.conf`
 
-4. Enable the startup script via `sysrc minecraft_enable=YES`
+4. put the `minecraft` script in `/usr/local/etc/rc.d` and make it executable with `chmod 755 /usr/local/etc/rc.d/minecraft`
+  
+5. Enable the startup script via `sysrc minecraft_enable=YES`
 
    If you chose a custom username, home directory or `.jar` file you can set them via, for example:
    
