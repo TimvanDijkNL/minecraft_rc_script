@@ -24,11 +24,15 @@ For the Minecraft server:
    
     `echo "set -g default-terminal screen-256color" > /usr/local/minecraft/.tmux.conf`
 
-4. put the `minecraft` script in `/usr/local/etc/rc.d` and make it executable with `chmod 755 /usr/local/etc/rc.d/minecraft`
-  
-5. Enable the startup script via `sysrc minecraft_enable=YES`
+4. Make sure all the files in the Minecraft user's home directory are owned by the Minecraft user:
 
-   If you chose a custom username, home directory or `.jar` file you can set them via, for example:
+   `chown -R minecraft:minecraft /usr/local/minecraft` 
+
+5. put the `minecraft` script in `/usr/local/etc/rc.d` and make it executable with `chmod 755 /usr/local/etc/rc.d/minecraft`
+  
+6. Enable the startup script via `sysrc minecraft_enable=YES`
+
+   If you chose a custom user, home directory or `.jar` file you can set them via, for example:
    
    `sysrc minecraft_user=example`
 
