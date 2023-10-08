@@ -24,6 +24,20 @@ For the Minecraft server:
    
     `echo "set -g default-terminal screen-256color" > /usr/local/minecraft/.tmux.conf`
 
+4. Enable the startup script via `sysrc minecraft_enable=YES`
+
+   If you chose a custom username, home directory or `.jar` file you can set them via, for example:
+   
+   `sysrc minecraft_user=example`
+
+   `sysrc minecraft_dir=/home/example`
+
+   `sysrc minecraft_jar=exmample.jar`
+
+   Optionally you can pass custom flags to Java, for example:
+
+   `sysrc minecraft_flags=-Xmx4G`
+   
 Note: If you do not create the tmux configuration file with this line in it, the server will still run, but Java will throw an exception about not knowing the terminal type upon starting the Minecraft server.
 
 Once you have completed these steps: 
