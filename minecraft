@@ -34,11 +34,11 @@ load_rc_config $name
 : ${minecraft_jar="server.jar"}
 : ${minecraft_flags=""}
 
-extra_commands="status attach"
+extra_commands="status console"
 start_cmd="${name}_start"
 stop_cmd="${name}_stop"
 status_cmd="${name}_status"
-attach_cmd="${name}_attach"
+console_cmd="${name}_console"
 
 # internal variables
 
@@ -92,7 +92,7 @@ minecraft_status() {
     fi
 }
 
-minecraft_attach() {
+minecraft_console() {
     check_prereqs
     if [ ! "$java_pid" ]; then
 	echo "${name} is not running."
@@ -101,7 +101,7 @@ minecraft_attach() {
 	text_green='\033[1;32m'
 	text_red='\033[1;31m'
 	text_normal='\033[0m'
-	echo -e	"\nTo detach again, press ${text_yellow}CTRL-B${text_normal} and then ${text_yellow}D${text_normal}.\n" \
+	echo -e	"\nTo exit the console again, press ${text_yellow}CTRL-B${text_normal} and then ${text_yellow}D${text_normal}.\n" \
 		"Right now, press ${text_red}CTRL-C${text_normal} to cancel, or press ${text_green}ENTER${text_normal} to continue...\n"
 	read null
 	export TERM=screen-256color
