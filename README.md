@@ -54,7 +54,7 @@ Once you have completed these steps:
 
 - To check if the server is running: `service minecraft status`
 
-- To attach to the Minecraft server console: `service minecraft attach`
+- To open the Minecraft server console: `service minecraft console`
   
-  You can now use the console to manage your Minecraft server. To detach again, press `CTRL-B` and then `D`.
+  You can now use the console to manage your Minecraft server. To exit the console again, press `CTRL-B` and then `D`.
 
