@@ -101,8 +101,7 @@ minecraft_console() {
 	text_green='\033[1;32m'
 	text_red='\033[1;31m'
 	text_normal='\033[0m'
-	echo -e	"\nTo exit the console again, press ${text_yellow}CTRL-B${text_normal} and then ${text_yellow}D${text_normal}.\n" \
-		"Right now, press ${text_red}CTRL-C${text_normal} to cancel, or press ${text_green}ENTER${text_normal} to continue...\n"
+	echo -e	"\nTo exit the console again, press ${text_yellow}CTRL-B${text_normal} and then ${text_yellow}D${text_normal}.\nRight now, press ${text_red}CTRL-C${text_normal} to cancel, or press ${text_green}ENTER${text_normal} to continue...\n"
 	read null
 	export TERM=screen-256color
 	/usr/bin/su ${minecraft_user} -c "/usr/local/bin/tmux attach -t ${name}"
